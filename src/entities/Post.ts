@@ -4,9 +4,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  ManyToOne,
 } from "typeorm";
 import { User } from "./User";
 
@@ -30,11 +30,11 @@ export class Post extends BaseEntity {
   userId!: number;
 
   @Field()
-  @CreateDateColumn()
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
   @Field()
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 
   @Field(() => User)
