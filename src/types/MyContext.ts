@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import session from "express-session";
+import { Connection } from "typeorm";
 
 export type MyContext = {
   req: Request & {
@@ -7,4 +8,5 @@ export type MyContext = {
       Partial<session.SessionData> & { userId?: number };
   };
   res: Response;
+  connection: Connection;
 };

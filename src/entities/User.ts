@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Post } from "./Post";
+import { Vote } from "./Vote";
 
 @ObjectType()
 @Entity()
@@ -41,4 +42,9 @@ export class User extends BaseEntity {
     cascade: true,
   })
   posts: Post[];
+
+  @OneToMany((_of) => Vote, (vote) => vote.user, {
+    cascade: true,
+  })
+  votes: Vote[];
 }

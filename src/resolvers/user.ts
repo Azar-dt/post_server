@@ -1,5 +1,13 @@
 import { User } from "../entities/User";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { hash, verify } from "argon2";
 import { UserMutationResponse } from "../types/UserMutationResponse";
 import { RegisterInput } from "../types/RegisterInput";
@@ -14,8 +22,12 @@ import { v4 as uuidv4 } from "uuid";
 import argon2 from "argon2";
 import { ChangePasswordData } from "../types/ChangePasswordData";
 
-@Resolver()
+@Resolver((_of) => User)
 export class UserResolver {
+  @FieldResolver()
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
+    return req.session.userId === user.id ? user.email : "";
+  }
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: MyContext) {
     // const curUser = User.findOne(req.session.userId);

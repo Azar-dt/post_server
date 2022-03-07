@@ -13,12 +13,13 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { PostResolver } from "./resolvers/post";
+import { MyContext } from "./types/MyContext";
 // import { sendEmail } from "./utils/sendEmail";
 
 const PORT = process.env.PORT || 4000;
 
 const main = async () => {
-  await createConnection({
+  const connection = await createConnection({
     type: "postgres",
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
@@ -64,7 +65,7 @@ const main = async () => {
       resolvers: [HelloResolver, UserResolver, PostResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res }): MyContext => ({ req, res, connection }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
   await apolloServer.start();
