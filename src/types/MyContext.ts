@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import session from "express-session";
 import { Connection } from "typeorm";
+import { buildDataLoaders } from "../utils/dataLoader";
 
 export type MyContext = {
   req: Request & {
@@ -9,4 +10,5 @@ export type MyContext = {
   };
   res: Response;
   connection: Connection;
+  dataloader: ReturnType<typeof buildDataLoaders>;
 };

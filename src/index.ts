@@ -14,6 +14,7 @@ import MongoStore from "connect-mongo";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { PostResolver } from "./resolvers/post";
 import { MyContext } from "./types/MyContext";
+import { buildDataLoaders } from "./utils/dataLoader";
 // import { sendEmail } from "./utils/sendEmail";
 
 const PORT = process.env.PORT || 4000;
@@ -65,7 +66,12 @@ const main = async () => {
       resolvers: [HelloResolver, UserResolver, PostResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ req, res, connection }),
+    context: ({ req, res }): MyContext => ({
+      req,
+      res,
+      connection,
+      dataloader: buildDataLoaders(),
+    }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground],
   });
   await apolloServer.start();

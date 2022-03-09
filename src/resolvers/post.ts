@@ -35,8 +35,12 @@ export class PostResolver {
   }
 
   @FieldResolver(() => User)
-  async user(@Root() root: Post) {
-    return await User.findOne({ where: { id: root.userId } });
+  async user(
+    @Root() root: Post,
+    @Ctx() { dataloader: { userLoader } }: MyContext
+  ) {
+    // return await User.findOne({ where: { id: root.userId } });
+    return await userLoader.load(root.userId);
   }
 
   @FieldResolver(() => User)
@@ -47,9 +51,14 @@ export class PostResolver {
       req: {
         session: { userId },
       },
+      dataloader: { currentUserVoteType },
     }: MyContext
   ) {
-    const existedVote = await Vote.findOne({ userId, postId: root.id });
+    if (!userId) return 0;
+    const existedVote = await currentUserVoteType.load({
+      postId: root.id,
+      userId,
+    });
     return existedVote ? existedVote.value : 0;
   }
 
