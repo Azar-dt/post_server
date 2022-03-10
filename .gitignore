@@ -1,6 +1,7 @@
 /dist/
 /node_modules/
 .env
+ormconfig.json
 
 # debug
 npm-debug.log*

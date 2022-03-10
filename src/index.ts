@@ -15,6 +15,7 @@ import { COOKIE_NAME, __prod__ } from "./constants";
 import { PostResolver } from "./resolvers/post";
 import { MyContext } from "./types/MyContext";
 import { buildDataLoaders } from "./utils/dataLoader";
+import path from "path";
 // import { sendEmail } from "./utils/sendEmail";
 
 const PORT = process.env.PORT || 4000;
@@ -22,20 +23,43 @@ const PORT = process.env.PORT || 4000;
 const main = async () => {
   const connection = await createConnection({
     type: "postgres",
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: true,
+    ...(__prod__
+      ? {
+          url: process.env.DATABASE_URL,
+          ///
+          extra: {
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          },
+          ssl: true,
+        }
+      : {
+          username: process.env.DB_USERNAME,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_NAME,
+          synchronize: true,
+        }),
+
     logging: true,
     entities: [__dirname + "/entities/*.js"],
+    migrations: [path.join(__dirname + "/migrations/*")],
   });
-  // await sendEmail("ducthang9122001@gmail.com", "<b>baka</b>");
+
+  if (__prod__) await connection.runMigrations();
+
   const app = express();
 
-  // use cors
+  // use cors      origin: ["https://studio.apollographql.com", "http://localhost:3000"],
+
   app.use(
     cors({
-      origin: ["https://studio.apollographql.com", "http://localhost:3000"],
+      origin: __prod__
+        ? process.env.COR_ORIGIN_PROD
+        : [
+            "https://studio.apollographql.com",
+            process.env.COR_ORIGIN_DEV as string,
+          ],
       credentials: true,
     })
   );
@@ -43,6 +67,9 @@ const main = async () => {
   // setting mongoose session
   const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME}:${process.env.SESSION_DB_PASSWORD}@reddit.gbngr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
   await mongoose.connect(mongoUrl);
+
+  app.set("trust proxy", 1);
+
   app.use(
     session({
       name: COOKIE_NAME,
@@ -54,7 +81,7 @@ const main = async () => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24,
         secure: __prod__,
-        sameSite: "lax",
+        sameSite: "none",
       },
     })
   );
