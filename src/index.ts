@@ -65,7 +65,7 @@ const main = async () => {
   );
 
   // setting mongoose session
-  const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME}:${process.env.SESSION_DB_PASSWORD}@reddit.gbngr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+  const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME}:${process.env.SESSION_DB_PASSWORD}@reddit.gbngr.mongodb.net/?retryWrites=true&w=majority`;
   await mongoose.connect(mongoUrl);
 
   app.set("trust proxy", 1);
