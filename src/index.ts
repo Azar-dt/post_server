@@ -26,7 +26,7 @@ const main = async () => {
     ...(__prod__
       ? {
           url: process.env.DATABASE_URL,
-          ///
+          // need to add ssl
           extra: {
             ssl: {
               rejectUnauthorized: false,
@@ -59,6 +59,7 @@ const main = async () => {
         : [
             "https://studio.apollographql.com",
             process.env.COR_ORIGIN_DEV as string,
+            "http://localhost:3000",
           ],
       credentials: true,
     })

@@ -14,7 +14,7 @@
     "@typegoose/typegoose": "^9.4.0",
     "apollo-server-core": "^3.6.1",
     "apollo-server-express": "^3.6.1",
-    "argon2": "^0.28.3",
+    "argon2": "^0.30.3",
     "class-validator": "^0.13.2",
     "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",

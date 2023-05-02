@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  server:
+    container_name: graphql-server
+    build: .
+    ports:
+      - "4000:4000"
+    # depends_on:
+    #   - db
+
+  # db:
+  #   container_name: db
+  #   image: "postgres"
+  #   ports:
+  #     - "4321:5432"
+  #   environment:
+  #     POSTGRES_USER: ${DB_USERNAME}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #     POSTGRES_DB: ${DB_NAME}

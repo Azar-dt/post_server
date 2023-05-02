@@ -1,18 +1,20 @@
-FROM node
+FROM node:14-alpine
 
 WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY yarn.lock ./
 
-RUN yarn    
+RUN yarn  
+RUN yarn global add typescript
 
 COPY . .
 
-RUN yarn build
-
 ENV NODE_ENV=production
 
-USER node
+# run yarn build and yarn start
+RUN yarn build  
 
-CMD [ "node" , "dist/index.js"]
+EXPOSE 4000
+
+CMD [ "yarn", "start"]
